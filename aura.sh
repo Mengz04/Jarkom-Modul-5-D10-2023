@@ -10,6 +10,8 @@ sysctl -p
 
 apt-get update
 
+apt-get install netcat -y
+
 apt install isc-dhcp-relay -y
 
 service isc-dhcp-relay start
@@ -31,23 +33,6 @@ ip_address=$(ip addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 # Display the assigned IP address
 echo "Assigned IP address for eth0: $ip_address"
 
-# Flush existing rules and set the default policies to DROP
-# iptables -F
-# iptables -P INPUT DROP
-# iptables -P FORWARD DROP
-# iptables -P OUTPUT ACCEPT
-
-# iptables -A FORWARD -p udp --dport 53 -j ACCEPT
-
-# iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-
-# iptables -A FORWARD -s 192.196.14.130 -j ACCEPT
-# iptables -A FORWARD -s 192.196.14.150 -j ACCEPT
-
-# # Allow incoming traffic on port 8080 (TCP)
-# iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
-# iptables rule with SNAT
-
 # Drop all incoming TCP traffic
 iptables -A INPUT -p tcp -j DROP
 # Drop all incoming UDP traffic
@@ -63,4 +48,12 @@ iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
 # Allow outgoing TCP traffic on port 8080
 iptables -A OUTPUT -p tcp --sport 8080 -j ACCEPT
 
+# Allow established and related connections
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $ip_address
+
+# test netcat
+nc -zvn 8.8.8.8 8080
+
+iptables -L -v
