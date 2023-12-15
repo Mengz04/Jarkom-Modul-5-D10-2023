@@ -10,6 +10,8 @@ echo 'net.ipv4.ip_forward=1' >  /etc/sysctl.conf
 
 apt-get update
 
+apt-get install netcat -y
+
 apt install isc-dhcp-relay -y
 
 service isc-dhcp-relay start
