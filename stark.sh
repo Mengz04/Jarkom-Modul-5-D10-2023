@@ -1,3 +1,7 @@
+apt-get update
+
+apt-get install netcat -y
+
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 
 echo 'net.ipv4.ip_forward=1' >  /etc/sysctl.conf
