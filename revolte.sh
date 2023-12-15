@@ -5,6 +5,8 @@ route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.196.14.141
 
 apt-get update
 
+apt-get install netcat -y
+
 apt install isc-dhcp-server -y
 
 echo '
